@@ -16,6 +16,25 @@ def origin_allowed(origin: str | None) -> bool:
     return origin in settings.allowed_origins
 
 
+class McpStreamCompatibilityMiddleware(BaseHTTPMiddleware):
+    """Return a clear message when a browser or non-streaming client hits /mcp."""
+
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path.startswith("/mcp"):
+            accept_header = request.headers.get("accept", "").lower()
+            if "text/event-stream" not in accept_header:
+                return JSONResponse(
+                    {
+                        "error": "Not Acceptable",
+                        "message": "This endpoint requires a Streamable HTTP MCP client. Use Accept: text/event-stream and connect to http://127.0.0.1:<port>/mcp.",
+                        "hint": "Do not open /mcp in a browser. Use /health for a browser health check.",
+                    },
+                    status_code=406,
+                )
+
+        return await call_next(request)
+
+
 class McpAuthMiddleware(BaseHTTPMiddleware):
     """Protect /mcp with optional API key and origin checks."""
 

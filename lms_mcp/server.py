@@ -8,7 +8,7 @@ from starlette.routing import Mount, Route
 
 from .config import Settings, settings
 from .http_client import HttpClient
-from .middleware import McpAuthMiddleware, origin_allowed
+from .middleware import McpAuthMiddleware, McpStreamCompatibilityMiddleware, origin_allowed
 from .tools import register_tools
 
 
@@ -33,6 +33,7 @@ def build_app(cfg: Settings = settings) -> Starlette:
     ]
 
     app = Starlette(routes=routes, lifespan=lifespan)
+    app.add_middleware(McpStreamCompatibilityMiddleware)
     app.add_middleware(McpAuthMiddleware)
 
     if cfg.allowed_origins:

@@ -36,6 +36,10 @@ With the standard LMS backend deployed, you typically just start the MCP server 
 - In your MCP client, register the endpoint `https://<host>/mcp` and, if configured, supply `Authorization: Bearer <MCP_API_KEY>`.
 After registration, call the `login` tool once (email/password); later tool calls will auto-attach and refresh tokens.
 
+For Render, use the Blueprint in `render.yaml`. Configure `LIBRARY_API_BASE_URL` with the deployed LMS API URL ending in `/api`, and provide a private `MCP_API_KEYS` value. After deployment, connect an MCP-compatible client (for example, VS Code Copilot Chat) to `https://<service-name>.onrender.com/mcp`; if an API key is configured, send it as a Bearer authorization header. Then call `login` with an LMS account before using protected tools.
+
+The current token cache uses a single in-memory slot, so deploy this MCP service for private, single-user access only. Do not share it among unrelated users until the token cache is isolated per client/session.
+
 Environment overrides are optional (e.g., different API URL, custom MCP API keys, or origin allowlist).
 
 Defaults out of the box:

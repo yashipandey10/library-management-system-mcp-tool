@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: library-management-mcp
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: LIBRARY_API_BASE_URL
+        sync: false
+      - key: MCP_API_KEYS
+        sync: false
+      - key: MCP_ALLOWED_ORIGINS
+        value: "*"

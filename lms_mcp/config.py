@@ -1,6 +1,12 @@
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import List
+
+from dotenv import load_dotenv
+
+
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 def _csv_env(name: str, default: str = "") -> List[str]:
